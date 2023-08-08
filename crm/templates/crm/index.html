@@ -1,0 +1,269 @@
+{% extends 'crm/base.html' %}
+{% load static %}
+{% load has_group %}
+
+{% block custom_css %}
+<style>
+	span{
+		font-size: 12px;
+	}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<br><br><br>
+
+<!-- FILTER -->
+<div class="row">
+	<form method="post" action="/crm/filter-leads/">{% csrf_token %}
+		<div class="btn-group">
+			<select name="status" class="form-select">
+				<option selected disabled=true>- Status -</option>
+				<option value="Open">Open</option>
+				<option value="Hot">Hot</option>
+				<option value="Warm">Warm</option>
+				<option value="Cold">Cold</option>
+				<option value="Postpone">Postpone</option>
+				<option value="Dropped">Dropped</option>
+				<option value="Invalid">Invalid</option>
+				<option value="Booking">Booking</option>
+			</select>
+		</div>
+		<div class="btn-group">
+			<select name="project_location" class="form-select">
+				<option selected disabled=true>- Location -</option>
+				<option value="East">East</option>
+				<option value="West">West</option>
+				<option value="North">North</option>
+				<option value="South">South</option>
+				<option value="CBD">CBD</option>
+			</select>
+		</div>
+		<div class="btn-group">
+			<select name="project_type" class="form-select">
+				<option selected disabled=true>- Type -</option>
+				<option value="Apartment">Apartment</option>
+				<option value="Villa">Villa</option>
+				<option value="Plot">Plot</option>
+				<option value="Resale">Resale</option>
+				<option value="Commercial">Commercial</option>
+			</select>
+		</div>
+		<div class="btn-group">
+			<select name="project_completion_status" class="form-select">
+				<option selected disabled=true>- Completion -</option>
+				<option value="Pre-launch">Pre-launch</option>
+				<option value="Under Construction">Construction</option>
+				<option value="Ready to move">Ready</option>
+			</select>
+		</div>
+		<div class="btn-group">
+			<select name="budget" class="form-select">
+				<option selected disabled=true>- Budget -</option>
+				<option value="Upto 50 lakh">Upto 50 lakh</option>
+				<option value="50 lakh - 1 crore">50 lakh - 1 crore</option>
+				<option value="1 crore - 2 crore">1 crore - 2 crore</option>
+				<option value="2 crore - 3 crore">2 crore - 3 crore</option>
+				<option value="3 crore - 5 crore">3 crore - 5 crore</option>
+				<option value="Above 5 crore">Above 5 crore</option>
+			</select>
+		</div>
+		<!-- <div class="btn-group">
+			<select name="site_visit_done" class="form-select">
+				<option selected disabled=true>- Site visit -</option>
+				<option value="true">Yes</option>
+				<option value="false">No</option>
+			</select>
+		</div> -->
+		<input type="submit" value="Filter" class="btn btn-success" />
+	</form>
+</div>
+
+<br>
+<table class="table table-bordered">
+	<thead class="bg-dark text-white">
+	<tr class="bg-secondary-subtle text-dark">
+		<th><small>Sno.</small></th>
+		<th><small>Lead Details</small></th>
+		<th><small>Actions</small></th>
+	</tr>
+	</thead>
+	<tbody>
+	{% for lead in my_leads %}
+	<tr>
+		<td>
+			<a href="/crm/leads/{{lead.id|cut:','}}/" class="badge bg-info">{{lead.id}}</a><br>
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#followupModal{{lead.id|cut:','}}"><i class="bi bi-chat-right-text"></i> 
+			</button>
+
+			<!-- Modal -->
+			<div id="followupModal{{lead.id|cut:','}}" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        <h4 class="modal-title">Add New Follow-up</h4>
+			      </div>
+			      <div class="modal-body">
+			        <form method="post" action="/crm/add-followup/{{lead.id|cut:','}}/">{% csrf_token %}
+			        	<label>Your remarks</label> 
+						<textarea class="form-control" name="followup_remarks" required></textarea><br>
+						Updated Status: <select name="status" class="form-select" required>
+							<option value="">Select new status</option>
+							<option value="Hot">Hot</option>
+							<option value="Cold">Cold</option>
+							<option value="Warm">Warm</option>
+							<option value="Postpone">Postpone</option>
+							<option value="Dropped">Dropped</option>
+						</select><br>
+			        	<div class="modal-footer">
+			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
+			        		<button type="submit" class="btn btn-success">Submit</button>
+			        	</div>
+			        </form>
+			      </div>
+
+			    </div>
+
+			  </div>
+			</div>
+		</td>
+		<td>
+			<span class="badge bg-secondary-subtle text-light-emphasis"><span>{{lead.name}}</span></span>
+			{% if lead.status == "Hot" %}
+			<span class="badge text-success-emphasis bg-success-subtle">{{lead.phone}}</span><br>
+			{% elif lead.status == "Warm" %}
+			<span class="badge text-warning-emphasis bg-warning-subtle">{{lead.phone}}</span><br>
+			{% elif lead.status == "Cold" %}
+			<span class="badge text-info-emphasis bg-info-subtle">{{lead.phone}}</span><br>
+			{% elif lead.status == "Postpone" %}
+			<span class="badge text-primary-emphasis bg-primary-subtle">{{lead.phone}}</span><br>
+			{% elif lead.status == "Dropped" %}
+			<span class="badge text-danger-emphasis bg-danger-subtle">{{lead.phone}}</span><br>
+			{% elif lead.status == "Invalid" %}
+			<span class="badge text-danger-emphasis bg-danger">{{lead.phone}}</span><br>
+			{% elif lead.status == "Booking" %}
+			<span class="badge text-success-emphasis bg-success">{{lead.phone}}</span><br>
+			{% else %}
+			<span class="badge text-light-emphasis bg-light">{{lead.phone}}</span><br>
+			{% endif %}
+
+			{% if lead.project_name %}
+			<span class="badge bg-secondary-subtle text-light-emphasis"><span>{{lead.project_name}}</span></span>
+			{% endif %}
+		</td>
+		<!-- Reminder -->
+		<td>	
+			{% if lead.reminder %}
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal{{lead.id|cut:','}}"><i class="bi bi-alarm text-success"></i><br>
+			<span>{{lead.reminder}}</span>
+			</button>
+			{% else %}
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal{{lead.id|cut:','}}"><i class="bi bi-alarm text-danger"></i> 
+			</button>
+			{% endif %}
+
+			<!-- Modal -->
+			<div id="myModal{{lead.id|cut:','}}" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        <h4 class="modal-title">Set Reminder</h4>
+			      </div>
+			      <div class="modal-body">
+			        <form method="post" action="/crm/set-reminder/{{lead.id|cut:','}}/">{% csrf_token %}
+			        	<input type="date" class="form-control" name="reminder" required>
+			        	<div class="modal-footer">
+			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
+			        		<button type="submit" class="btn btn-success">Submit</button>
+			        	</div>
+			        </form>
+			      </div>
+
+			    </div>
+
+			  </div>
+			</div>
+
+			<!-- Site Visit Date -->
+
+			{% if lead.site_visit_date %}
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#svModal{{lead.id|cut:','}}"><i class="bi bi-calendar-check text-danger"></i><br>
+			<span>{{lead.site_visit_date}}</span>
+			</button>
+			{% else %}
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#svModal{{lead.id|cut:','}}"><i class="bi bi-calendar-check text-danger"></i> 
+			</button>
+			{% endif %}
+
+			<!-- Modal -->
+			<div id="svModal{{lead.id|cut:','}}" class="modal fade" role="dialog">
+			  <div class="modal-dialog">
+
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        <h4 class="modal-title">Site Visit Date</h4>
+			      </div>
+			      <div class="modal-body">
+			        <form method="post" action="/crm/set-site-visit/{{lead.id|cut:','}}/">{% csrf_token %}
+			        	<input type="date" class="form-control" name="site_visit_date" required>
+			        	<div class="modal-footer">
+			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
+			        		<button type="submit" class="btn btn-success">Submit</button>
+			        	</div>
+			        </form>
+			      </div>
+
+			    </div>
+
+			  </div>
+			</div>
+			
+		</td>
+	</tr>
+	<tr>
+		{% if lead.site_visit_done %}
+			<td><i class="bi bi-check-circle text-success"></i>
+				<!-- <span style="font-size: 10px">{{lead.site_visit_date}}</span> -->
+			</td>
+		{% else %}
+			<td><i class="bi bi-x-circle text-danger"></i></td>
+		{% endif %}
+		<td colspan="2">
+			<span style="font-size: 12px">{{lead.initial_observation}}</span>
+		</td>
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<br>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if my_leads.has_previous %}
+            <a href="?page=1" class="text-success-emphasis">&laquo; first</a>
+            <a href="?page={{ my_leads.previous_page_number }}" class="text-info">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ my_leads.number }} of {{ my_leads.paginator.num_pages }}.
+        </span>
+
+        {% if my_leads.has_next %}
+            <a href="?page={{ my_leads.next_page_number }}" class="text-info">next</a>
+            <a href="?page={{ my_leads.paginator.num_pages }}" class="text-success-emphasis">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'crm/base.html' %}
+{% load static %}
+
+{% block content %}
+<br><br><br>
+<div class="row">
+	<div class="col text-end">
+		<a href="/crm/" class="btn btn-danger right">Go Back</a><br><br>
+	</div>
+</div>
+
+<table class="table">
+  <thead class="bg-success-subtle">
+    <tr>
+      <th scope="col">Contact Details</th>
+      <th scope="col">Project Details</th>
+      <th scope="col">Booking Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+      	<span class="badge text-warning-emphasis bg-warning-subtle">{{selected_lead.name}}</span><br>
+      	<span class="badge bg-dark">{{selected_lead.phone}}</span><br>
+	      {% if selected_lead.email %}
+	      <span class="badge bg-info-subtle text-dark">{{selected_lead.email}}</span><br>
+	      {% endif %}
+	      <span class="badge bg-secondary-subtle text-dark">{{selected_lead.date_of_enquiry}}</span>
+	    </td>
+	    <td>
+	    	{% if selected_lead.project_name %}
+	    	<span class="badge bg-secondary">{{selected_lead.project_name}}</span><br>
+	    	{% endif %}
+	    	{% if selected_lead.project_location %}
+	    	<small>{{selected_lead.project_location}}</small> | 
+	    	<small>{{selected_lead.project_type}}</small><br>
+	    	{% endif %}
+	    	{% if selected_lead.project_completion_status %}
+	    	<small>{{selected_lead.project_completion_status}}</small><br>
+	    	{% endif %}
+	    	{% if selected_lead.budget %}
+	    	<small>{{selected_lead.budget}}</small><br>
+	    	{% endif %}
+	    </td>
+	    <td>
+	    	{% if selected_lead.unit_number %}
+	    		<i class="bi bi-building-check"></i> <strong>{{selected_lead.unit_number}}</strong><br>
+	    		<i class="bi bi-currency-rupee"></i> <strong>{{selected_lead.agreement_value}}</strong>
+	    	{% else %}
+	    	<span class="badge bg-secondary-subtle text-dark">Booking not done yet : {{selected_lead.status}}</span>
+	    	{% endif %}
+	    </td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+<h4 class="bg-success-subtle text-dark mb-3">Follow-up History</h4>
+
+<table class="table table-striped text-responsive">
+  <thead>
+    <tr>
+      <th scope="col">Followup Details</th>
+      <th scope="col">Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% if selected_lead.initial_observation %}
+  	<tr>
+    	<td><small class="badge bg-secondary">{{selected_lead.date_created}}</small> 
+    	<td>{{selected_lead.initial_observation}}</td>
+		</tr>
+	{% endif %}
+	{% for i in followups %}
+	<tr>
+		<td>
+			<small class="badge bg-secondary">{{i.timestamp}}</small> &nbsp;&nbsp; 
+			<small class="badge text-warning-emphasis bg-warning-subtle">{{i.by}}</small>
+		</td>
+		<td>{{i.followup_remarks}}</td>
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+<br>
+
+<!-- <h4 class="bg-success-subtle text-dark mb-3">Add new followup</h4>
+<div class="row">
+	<div class="col-12">
+		<form class="form" method="post" action="/crm/add-followup/{{selected_lead.id}}/">
+			{% csrf_token %}
+			<label>Your remarks</label> 
+			<textarea class="form-control" name="followup_remarks" required></textarea><br>
+			Updated Status: <select name="status" class="form-select">
+				<option selected>Select new status</option>
+				<option value="Hot">Hot</option>
+				<option value="Cold">Cold</option>
+				<option value="Warm">Warm</option>
+				<option value="Dropped">Dropped</option>
+				<option value="Invalid">Invalid</option>
+			</select><br>
+			<input type="submit" value="Submit" class="btn btn-success form-control">
+		</form>
+	</div>
+</div> -->
+
+
+
+{% endblock %}

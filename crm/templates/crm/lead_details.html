@@ -1,0 +1,193 @@
+{% extends 'crm/base.html' %}
+{% load static %}
+
+{% block content %}
+<br><br><br>
+<div class="container">
+
+<div class="row">
+	<div class="col text-end">
+		<a href="/crm/" class="btn btn-danger right">Go Back</a><br><br>
+	</div>
+</div>
+
+<table class="table">
+  <thead class="bg-success-subtle">
+    <tr>
+      <th scope="col">Contact Details</th>
+      <th scope="col">Project Details</th>
+      <th scope="col">Booking Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+      	<span class="badge text-warning-emphasis bg-warning-subtle">{{selected_lead.name}}</span><br>
+      	<span class="badge bg-dark">{{selected_lead.phone}}</span><br>
+	      {% if selected_lead.email %}
+	      <span class="badge bg-info-subtle text-dark">{{selected_lead.email}}</span><br>
+	      {% endif %}
+	      <span class="badge bg-secondary-subtle text-dark">{{selected_lead.date_of_enquiry}}</span><br>
+	      <span class="badge bg-info-subtle text-dark">{{selected_lead.source}}</span>
+	    </td>
+	    <td>
+	    	{% if selected_lead.project_name %}
+	    		<span class="badge bg-secondary">{{selected_lead.project_name}}</span><br>
+	    	{% else %}
+	    	<button type="button" class="btn btn-lg" data-toggle="modal" data-target="#projectModal"><i class="bi bi-building-add"></i>
+				</button>
+
+				<!-- Modal -->
+				<div id="projectModal" class="modal fade" role="dialog">
+				  <div class="modal-dialog">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Assign Project To Lead</h4>
+				      </div>
+				      <div class="modal-body">
+				        <form method="post" action="/crm/add-project/{{selected_lead.id}}/">{% csrf_token %}
+				        	<input name="project_name" class="form-control" placeholder="Enter project name" required><br>
+				        	<select name="project_location" class="form-control" required>
+				        		<option value="">-- Select Location --</option>
+				        		<option value="East">East</option>
+				        		<option value="West">West</option>
+				        		<option value="North">North</option>
+				        		<option value="South">South</option>
+				        		<option value="CBD">CBD</option>
+				        	</select><br>
+				        	<select name="project_type" class="form-control" required>
+				        		<option value="">-- Select Project Type --</option>
+				        		<option value="Apartment">Apartment</option>
+				        		<option value="Villa">Villa</option>
+				        		<option value="Plot">Plot</option>
+				        		<option value="Resale">Resale</option>
+				        		<option value="Commercial">Commercial</option>
+				        	</select><br>
+				        	<select name="project_completion_status" class="form-control" required>
+				        		<option value="">-- Select Completion Status --</option>
+				        		<option value="Pre-launch">Pre-launch</option>
+				        		<option value="Under Construction">Under Construction</option>
+				        		<option value="Ready to move">Ready to move</option>
+				        	</select><br>
+				        	<select name="budget" class="form-control" required>
+				        		<option value="">-- Select Budget --</option>
+				        		<option value="Upto 50 lakh">Upto 50 lakh</option>
+				        		<option value="50 lakh - 1 crore">50 lakh - 1 crore</option>
+				        		<option value="1 crore - 2 crore">1 crore - 2 crore</option>
+				        		<option value="2 crore - 3 crore">2 crore - 3 crore</option>
+				        		<option value="3 crore - 5 crore">3 crore - 5 crore</option>
+				        		<option value="Above 5 crore">Above 5 crore</option>
+				        	</select><br>
+				        	<div class="modal-footer">
+				        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
+				        		<button type="submit" class="btn btn-success">Submit</button>
+				        	</div>
+				        </form>
+				      </div>
+
+				    </div>
+
+				  </div>
+				</div>
+
+	    	{% endif %}
+	    	{% if selected_lead.project_location %}
+	    	<small>{{selected_lead.project_location}}</small> | <small>{{selected_lead.project_type}}</small><br>
+	    	{% endif %}
+	    	{% if selected_lead.project_completion_status %}
+	    	<small>{{selected_lead.project_completion_status}}</small><br>
+	    	{% endif %}
+	    	{% if selected_lead.budget %}
+	    	<small>{{selected_lead.budget}}</small><br>
+	    	{% endif %}
+	    </td>
+	    <td>
+	    	{% if selected_lead.unit_number %}
+	    		<i class="bi bi-building-check"></i> <strong>{{selected_lead.unit_number}}</strong><br>
+	    		<i class="bi bi-currency-rupee"></i> <strong>{{selected_lead.agreement_value}}</strong>
+	    	{% else %}
+	    	<button type="button" class="btn btn-lg" data-toggle="modal" data-target="#myModal"><i class="bi bi-cart-check text-success"></i>
+				</button>
+
+				<!-- Modal -->
+				<div id="myModal" class="modal fade" role="dialog">
+				  <div class="modal-dialog">
+
+				    <!-- Modal content-->
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Booking Form</h4>
+				      </div>
+				      <div class="modal-body">
+				        <form method="post" action="/crm/booking/{{selected_lead.id}}/">{% csrf_token %}
+				        	Project Name: <input type="text" class="form-control" name="project_name"><br>
+				        	Unit Number: <input type="text" class="form-control" name="unit_number"><br>
+				        	Agreement value: <input type="text" class="form-control" name="agreement_value"><br>
+				        	<div class="modal-footer">
+				        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
+				        		<button type="submit" class="btn btn-success">Submit</button>
+				        	</div>
+				        </form>
+				      </div>
+
+				    </div>
+
+				  </div>
+				</div>
+
+	    	{% endif %}
+	    </td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+<h4 class="bg-success-subtle text-dark mb-3">Follow-up History</h4>
+
+<table class="table table-striped text-responsive">
+  <thead>
+    <tr>
+      <th scope="col">Followup Details</th>
+      <th scope="col">Remarks</th>
+    </tr>
+  </thead>
+  <tbody>
+  	{% if not followups %}
+  	<tr>
+    	<td><small class="badge bg-info">{{selected_lead.date_of_enquiry}}</small> 
+    	<td>{{selected_lead.initial_observation}}</td>
+		</tr>
+	{% endif %}
+	{% for i in followups %}
+	<tr>
+		<td>
+			<small class="badge bg-secondary">{{i.timestamp}}</small> &nbsp;&nbsp; 
+			<small class="badge text-warning-emphasis bg-warning-subtle">{{i.by}}</small>
+		</td>
+		<td>{{i.followup_remarks}}</td>
+	</tr>
+	{% endfor %}
+</tbody>
+</table>
+<br>
+
+<br>
+<h4 class="bg-success-subtle text-dark mb-3">Site visit done?</h4>
+<div class="row">
+	<div class="col-12">
+		<form class="form" method="post" action="/crm/site-visit-done/{{selected_lead.id}}/">
+			{% csrf_token %}
+			<label>Site Visit Done: </label>&nbsp;&nbsp;
+			<input type="submit" value="Confirm" class="btn btn-success">
+		</form>
+	</div>
+</div>
+<br>
+
+</div>
+
+{% endblock %}
