@@ -152,5 +152,5 @@ MEDIA_URL = '/media/'
 IMPORT_EXPORT_IMPORT_PERMISSION_CODE = 'delete'
 REST_FRAMEWORK = {
         'DEFAULT_PERMISSION_CLASSES' : 
-        ('rest_framework.permissions.IsAuthenticated',)
+        ('rest_framework.permissions.AllowAny',)
     }  

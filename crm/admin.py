@@ -44,7 +44,7 @@ class LeadAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 		(
 		None, {
 			'fields':(
-				('date_of_enquiry',),
+				('date_of_enquiry','source'),
 				('name', 'phone',), 
 				('email', 'project_name'),
 				('project_location', 'project_type',),

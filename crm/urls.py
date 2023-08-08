@@ -7,7 +7,7 @@ router.register('', views.LeadView)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-
+    #path('crm-leads',views.crm_leads, name = 'crm-leads'),
     path('', views.index, name="CRM Home"),
     path('search/', views.lead_search),
     path('leads/<int:id>/', views.lead_details),

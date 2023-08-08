@@ -15,6 +15,13 @@ class LeadView(viewsets.ModelViewSet):
 	queryset = Lead.objects.all()
 	serializer_class = LeadSerializer
 
+
+def crm_leads(request): ...
+
+
+
+
+
 def webhook214(request):
 	hub_challange = request.GET.get('hub.challenge')
 	hub_mode = request.GET.get('hub.mode')

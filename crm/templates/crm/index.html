@@ -94,12 +94,12 @@
 	{% for lead in my_leads %}
 	<tr>
 		<td>
-			<a href="/crm/leads/{{lead.id}}/" class="badge bg-info">{{lead.id}}</a><br>
-			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#followupModal{{lead.id}}"><i class="bi bi-chat-right-text"></i> 
+			<a href="/crm/leads/{{lead.id|cut:','}}/" class="badge bg-info">{{lead.id}}</a><br>
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#followupModal{{lead.id|cut:','}}"><i class="bi bi-chat-right-text"></i> 
 			</button>
 
 			<!-- Modal -->
-			<div id="followupModal{{lead.id}}" class="modal fade" role="dialog">
+			<div id="followupModal{{lead.id|cut:','}}" class="modal fade" role="dialog">
 			  <div class="modal-dialog">
 
 			    <!-- Modal content-->
@@ -109,7 +109,7 @@
 			        <h4 class="modal-title">Add New Follow-up</h4>
 			      </div>
 			      <div class="modal-body">
-			        <form method="post" action="/crm/add-followup/{{lead.id}}/">{% csrf_token %}
+			        <form method="post" action="/crm/add-followup/{{lead.id|cut:','}}/">{% csrf_token %}
 			        	<label>Your remarks</label> 
 						<textarea class="form-control" name="followup_remarks" required></textarea><br>
 						Updated Status: <select name="status" class="form-select" required>
@@ -159,16 +159,16 @@
 		<!-- Reminder -->
 		<td>	
 			{% if lead.reminder %}
-			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal{{lead.id}}"><i class="bi bi-alarm text-success"></i><br>
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal{{lead.id|cut:','}}"><i class="bi bi-alarm text-success"></i><br>
 			<span>{{lead.reminder}}</span>
 			</button>
 			{% else %}
-			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal{{lead.id}}"><i class="bi bi-alarm text-danger"></i> 
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal{{lead.id|cut:','}}"><i class="bi bi-alarm text-danger"></i> 
 			</button>
 			{% endif %}
 
 			<!-- Modal -->
-			<div id="myModal{{lead.id}}" class="modal fade" role="dialog">
+			<div id="myModal{{lead.id|cut:','}}" class="modal fade" role="dialog">
 			  <div class="modal-dialog">
 
 			    <!-- Modal content-->
@@ -178,7 +178,7 @@
 			        <h4 class="modal-title">Set Reminder</h4>
 			      </div>
 			      <div class="modal-body">
-			        <form method="post" action="/crm/set-reminder/{{lead.id}}/">{% csrf_token %}
+			        <form method="post" action="/crm/set-reminder/{{lead.id|cut:','}}/">{% csrf_token %}
 			        	<input type="date" class="form-control" name="reminder" required>
 			        	<div class="modal-footer">
 			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
@@ -195,16 +195,16 @@
 			<!-- Site Visit Date -->
 
 			{% if lead.site_visit_date %}
-			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#svModal{{lead.id}}"><i class="bi bi-calendar-check text-danger"></i><br>
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#svModal{{lead.id|cut:','}}"><i class="bi bi-calendar-check text-danger"></i><br>
 			<span>{{lead.site_visit_date}}</span>
 			</button>
 			{% else %}
-			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#svModal{{lead.id}}"><i class="bi bi-calendar-check text-danger"></i> 
+			<button type="button" class="btn btn-sm" data-toggle="modal" data-target="#svModal{{lead.id|cut:','}}"><i class="bi bi-calendar-check text-danger"></i> 
 			</button>
 			{% endif %}
 
 			<!-- Modal -->
-			<div id="svModal{{lead.id}}" class="modal fade" role="dialog">
+			<div id="svModal{{lead.id|cut:','}}" class="modal fade" role="dialog">
 			  <div class="modal-dialog">
 
 			    <!-- Modal content-->
@@ -214,7 +214,7 @@
 			        <h4 class="modal-title">Site Visit Date</h4>
 			      </div>
 			      <div class="modal-body">
-			        <form method="post" action="/crm/set-site-visit/{{lead.id}}/">{% csrf_token %}
+			        <form method="post" action="/crm/set-site-visit/{{lead.id|cut:','}}/">{% csrf_token %}
 			        	<input type="date" class="form-control" name="site_visit_date" required>
 			        	<div class="modal-footer">
 			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Skip</button>
