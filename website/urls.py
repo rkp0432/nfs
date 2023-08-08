@@ -9,4 +9,5 @@ urlpatterns = [
     path('partners/', views.partners),
     path('terms/', views.terms),
     path('privacy/', views.privacy),
+    path('webhook214/', views.webhook214, name="webhook214"),
 ]
