@@ -22,6 +22,16 @@ def crm_leads(request): ...
 # webhook
 @csrf_exempt
 def webhook214(request):
+	hub_challange = request.GET.get('hub.challenge')
+	hub_mode = request.GET.get('hub.mode')
+	hub_verify_token = request.GET.get('hub.verify_token')
+
+
+	if hub_verify_token == 'abcdefghijklmn0123456789':
+		return HttpResponse(hub_challange)
+	else:
+		return HttpResponse(False)
+		
 	access_token = "EAAIETM1TdZCoBOyd7PHZByCdrziuZBn1XXIbbZBi7mg6sG5kZAArKNpPOZAzZC6LwhWcGcg43ZA898ZAkiBKxtCH0LhIb20LSaoZBjTinfKbZC9wgMjR0MrMlAZCMbAIryyP8KvBNglUpZBdZCvTuZCBzEmqYt9TziYr1JfOSzplre6sWI0apNgnZBiwaluq3UzlDA6QCv3ZBvAuqvvtcAx9ATLsZD"
 
 	# print(request.body)
@@ -113,15 +123,7 @@ def webhook214(request):
 	# except:
 	# 	pass
 
-	hub_challange = request.GET.get('hub.challenge')
-	hub_mode = request.GET.get('hub.mode')
-	hub_verify_token = request.GET.get('hub.verify_token')
 
-
-	if hub_verify_token == 'abcdefghijklmn0123456789':
-		return HttpResponse(hub_challange)
-	else:
-		return HttpResponse(False)
 
 
 
