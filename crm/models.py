@@ -20,7 +20,7 @@ class Staff(models.Model):
 class Lead(models.Model):
 	name = models.CharField(max_length=200)
 	phone = models.CharField(max_length=20)
-	facebook_id = models.CharField(max_length=200, unique=True, default=timezone.now())
+	facebook_id = models.CharField(max_length=200, default=timezone.now())
 	alt_phone = models.CharField(max_length=20, null=True, blank=True)
 	email = models.EmailField(null=True, blank=True)
 	project_name = models.CharField(max_length=200, null=True, blank=True)
